@@ -10,25 +10,50 @@ export default function Dashboard() {
       .catch(() => setJobs([]))
   }, [])
 
-  const stages = ['Art Approval', 'Printing', 'Cutting', 'Finishing', 'Shipping']
+  const stages = [
+    'Art Approval',
+    'Material Ordering',
+    'Printing',
+    'Cutting',
+    'Finishing',
+    'Shipping'
+  ]
 
   return (
-    <div className="p-8 min-h-screen bg-gray-50">
-      <h1 className="text-4xl font-bold mb-8 text-blue-700">ShopVis – Live & Running</h1>
-      <p className="text-xl mb-6">Your ShopVox replacement is officially live. 🎉</p>
-      <div className="flex gap-6 overflow-x-auto">
-        {stages.map(stage => (
-          <div key={stage} className="bg-white rounded-lg shadow p-6 min-w-80">
-            <h2 className="font-bold text-lg mb-4 text-gray-800">{stage}</h2>
-            {jobs.filter(j => j.status === stage).length === 0 && (
-              <p className="text-gray-500">No jobs yet – create your first quote!</p>
-            )}
-          </div>
-        ))}
-      </div>
-      <a href="/quote" className="fixed bottom-8 right-8 bg-blue-600 text-white px-8 py-4 rounded-full text-xl shadow-lg hover:bg-blue-700">
-        + New Quote
-      </a>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <header className="bg-white shadow-lg sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 className="text-2xl md:text-3xl font-black text-indigo-700">Dynamic Graphics – ShopVis</h1>
+          <a href="/quote" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-lg shadow transition">
+            + New Quote
+          </a>
+        </div>
+      </header>
+
+      <main className="p-4 md:p-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">Job Board</h2>
+
+        {/* Responsive grid – 1 column on phone, 2 on tablet, 3+ on desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-6">
+          {stages.map(stage => (
+            <div key={stage} className="bg-white rounded-xl shadow-xl p-5 border-t-8 border-indigo-600 flex flex-col">
+              <h3 className="font-bold text-lg text-gray-800 mb-4 text-center">{stage}</h3>
+              <div className="space-y-3 flex-1 min-h-32">
+                {jobs.filter(j => j.status === stage).length === 0 ? (
+                  <p className="text-gray-400 text-center italic text-sm">No jobs</p>
+                ) : (
+                  jobs.filter(j => j.status === stage).map(job => (
+                    <div key={job._id} className="bg-gradient-to-r from-indigo-50 to-blue-50 p-3 rounded-lg border text-sm">
+                      <p className="font-semibold">Quote #{job.quote?._id}</p>
+                      <p className="text-gray-600 truncate">{job.quote?.customer || '—'}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
   )
 }
